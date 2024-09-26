@@ -294,25 +294,6 @@ func createTables() {
 		log.Fatalf("ERROR: Cannot create table location: %v", err)
 	}
 
-	// Add foreign keys after tables are created
-	query = `ALTER TABLE employee ADD CONSTRAINT fk_department FOREIGN KEY (department_id) REFERENCES department(id)`
-	_, err = db.Query(query)
-	if err != nil {
-		log.Fatalf("ERROR: Cannot add foreign key to employee: %v", err)
-	}
-
-	query = `ALTER TABLE department ADD CONSTRAINT fk_location FOREIGN KEY (location_id) REFERENCES location(id)`
-	_, err = db.Query(query)
-	if err != nil {
-		log.Fatalf("ERROR: Cannot add foreign key to department: %v", err)
-	}
-
-	query = `ALTER TABLE department ADD CONSTRAINT fk_manager FOREIGN KEY (manager_id) REFERENCES employee(id)`
-	_, err = db.Query(query)
-	if err != nil {
-		log.Fatalf("ERROR: Cannot add foreign key to department: %v", err)
-	}
-
 	// If no users are in the database, add a default user
 	query = `SELECT COUNT(*) FROM employee`
 	rows, err := db.Query(query)
