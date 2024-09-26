@@ -115,6 +115,11 @@ jobs:
           echo "Deploying to staging environment"
           echo "Deployed to ${{ job.environment.url }}"
 
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
       - name: Copy docker-compose and env files to staging server
         run: |
           ssh -o StrictHostKeyChecking=no jordy@10.0.20.15 "mkdir -p /home/jordy/docker/hr-applicatie-staging"
@@ -123,7 +128,7 @@ jobs:
 
       - name: Pull latest Docker image on staging server
         run: |
-          ssh -o StrictHostKeyChecking=no jordy@10.0.20.15 "docker-compose -f /home/jordy/docker/hr-applicatie-staging/docker-compose.yml pull api"
+          ssh -o StrictHostKeyChecking=no jordy@10.0.20.15 "docker-compose -f /home/jordy/docker/hr-applicatie-staging/docker-compose.yml pull api && docker-compose -f /home/jordy/docker/hr-applicatie-staging/docker-compose.yml up -d --force-recreate"
 
   DeployProduction:
     name: "Deploy to Production"
@@ -168,3 +173,17 @@ jobs:
         run: |
           echo "Deploying to production environment"
           echo "Deployed to ${{ job.environment.url }}"
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Copy docker-compose and env files to production server
+        run: |
+          ssh -o StrictHostKeyChecking=no jordy@10.0.20.15 "mkdir -p /home/jordy/docker/hr-applicatie
+          scp -o StrictHostKeyChecking=no ./docker-compose.yml jordy@10.0.20.15:/home/jordy/docker/hr-applicatie/docker-compose.yml
+
+      - name: Pull latest Docker image on production server
+        run: |
+          ssh -o StrictHostKeyChecking=no jordy@10.0.20.15 "docker-compose -f /home/jordy/docker/hr-applicatie/docker-compose.yml pull api && docker-compose -f /home/jordy/docker/hr-applicatie/docker-compose.yml up -d  --force-recreate"
