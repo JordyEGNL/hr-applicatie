@@ -1,5 +1,4 @@
 # HR-Applicatie
-[![Build and Deploy Docker Image](https://github.com/fonteyn-vakantieparken-c/hr-applicatie/actions/workflows/docker-image.yml/badge.svg)](https://github.com/fonteyn-vakantieparken-c/hr-applicatie/actions/workflows/docker-image.yml)
 
 ## Local setup
 1. Install [Docker](https://www.docker.com/products/docker-desktop)
