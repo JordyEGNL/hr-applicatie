@@ -36,7 +36,7 @@ services:
       MYSQL_USER: "dbadmin"
       MYSQL_PASSWORD: "dbadmin"
     ports:
-      - "3306:3306"
+      - "${DB_PORT:-127.0.0.1:3306}:3306"
     volumes:
       - ./db:/var/lib/mysql
     healthcheck:
