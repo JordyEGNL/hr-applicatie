@@ -1,0 +1,675 @@
+basePath: /
+definitions:
+  main.StatusBadRequest:
+    properties:
+      error:
+        type: string
+    type: object
+  main.StatusInternalServerError:
+    properties:
+      error:
+        type: string
+    type: object
+  main.StatusOK:
+    properties:
+      message:
+        type: string
+    type: object
+  main.StatusUnauthorized:
+    properties:
+      message:
+        type: string
+    type: object
+  main.getDepartmentJson:
+    properties:
+      id:
+        example: 1
+        type: integer
+      location:
+        example: Amsterdam
+        type: string
+      manager:
+        example: John Doe
+        type: string
+      name:
+        example: Front Office
+        type: string
+    type: object
+  main.getEmployeeJson:
+    properties:
+      can_login:
+        example: true
+        type: boolean
+      creation_date:
+        example: "2021-01-01 9:00:00"
+        type: string
+      department:
+        example: "1"
+        type: string
+      edit_date:
+        example: "2021-01-01 12:00:00"
+        type: string
+      email:
+        example: j.doe@holiday-parks.eu
+        type: string
+      first_name:
+        example: John
+        type: string
+      hire_date:
+        example: "2021-01-01"
+        type: string
+      id:
+        example: 1
+        type: integer
+      last_login:
+        example: "2021-01-01 10:00:00"
+        type: string
+      last_name:
+        example: Doe
+        type: string
+      location:
+        $ref: '#/definitions/main.getLocationJson'
+      manager_email:
+        example: m.anager@holiday-parks.eu
+        type: string
+      phone:
+        example: 06-12345678
+        type: string
+    type: object
+  main.getLocationJson:
+    properties:
+      address:
+        example: Street 1
+        type: string
+      city:
+        example: Amsterdam
+        type: string
+      country:
+        example: Netherlands
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: Holiday Park
+        type: string
+      postal_code:
+        example: 1234 AB
+        type: string
+    type: object
+host: 127.0.0.1:5000
+info:
+  contact:
+    email: j.hoebergen@student.fontys.nl
+    name: Jordy Hoebergen
+  description: This is the HR API for the Holiday Parks company.
+  license:
+    name: GPL-3.0
+    url: https://www.gnu.org/licenses/gpl-3.0.en.html
+  title: HR API
+paths:
+  /api/v1/department:
+    post:
+      consumes:
+      - application/json
+      description: Add a new department to the database
+      parameters:
+      - description: Name
+        in: body
+        name: name
+        required: true
+        schema:
+          type: string
+      - description: Location ID
+        in: body
+        name: location_id
+        required: true
+        schema:
+          type: integer
+      - description: Manager ID
+        in: body
+        name: manager_id
+        required: true
+        schema:
+          type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.StatusOK'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.StatusBadRequest'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/main.StatusUnauthorized'
+      security:
+      - apikey: []
+      summary: Add department
+      tags:
+      - departments
+  /api/v1/department/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a department from the database
+      parameters:
+      - description: Department ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.StatusOK'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.StatusBadRequest'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/main.StatusUnauthorized'
+      security:
+      - apikey: []
+      summary: Delete department
+      tags:
+      - departments
+    get:
+      consumes:
+      - application/json
+      description: Get all information from all departments or a specific department
+      parameters:
+      - description: Department ID
+        in: path
+        name: id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.getDepartmentJson'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/main.StatusUnauthorized'
+      security:
+      - apikey: []
+      summary: Show department(s)
+      tags:
+      - departments
+    put:
+      consumes:
+      - application/json
+      description: Update a department in the database
+      parameters:
+      - description: Department ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Name
+        in: body
+        name: name
+        schema:
+          type: string
+      - description: Location ID
+        in: body
+        name: location_id
+        schema:
+          type: integer
+      - description: Manager ID
+        in: body
+        name: manager_id
+        schema:
+          type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.StatusOK'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.StatusBadRequest'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/main.StatusUnauthorized'
+      security:
+      - apikey: []
+      summary: Update department
+      tags:
+      - departments
+  /api/v1/employee:
+    post:
+      consumes:
+      - application/json
+      description: Add a new employee to the database
+      parameters:
+      - description: First name
+        in: body
+        name: first_name
+        required: true
+        schema:
+          type: string
+      - description: Last name
+        in: body
+        name: last_name
+        required: true
+        schema:
+          type: string
+      - description: Email
+        in: body
+        name: email
+        required: true
+        schema:
+          type: string
+      - description: Phone
+        in: body
+        name: phone
+        required: true
+        schema:
+          type: string
+      - description: Hire date
+        in: body
+        name: hire_date
+        required: true
+        schema:
+          type: string
+      - description: Department ID
+        in: body
+        name: department_id
+        required: true
+        schema:
+          type: integer
+      - description: Can login
+        in: body
+        name: can_login
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.StatusOK'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.StatusBadRequest'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/main.StatusUnauthorized'
+      security:
+      - apikey: []
+      summary: Add employee
+      tags:
+      - employees
+  /api/v1/employee/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete an employee from the database
+      parameters:
+      - description: Employee ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.StatusOK'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.StatusBadRequest'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/main.StatusUnauthorized'
+      security:
+      - apikey: []
+      summary: Delete employee
+      tags:
+      - employees
+    get:
+      consumes:
+      - application/json
+      description: Get all information from all employees or a specific employee
+      parameters:
+      - description: Employee ID
+        in: path
+        name: id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.getEmployeeJson'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/main.StatusUnauthorized'
+      security:
+      - apikey: []
+      summary: Show employee(s)
+      tags:
+      - employees
+    put:
+      consumes:
+      - application/json
+      description: Update an employee in the database
+      parameters:
+      - description: Employee ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: First name
+        in: body
+        name: first_name
+        schema:
+          type: string
+      - description: Last name
+        in: body
+        name: last_name
+        schema:
+          type: string
+      - description: Email
+        in: body
+        name: email
+        schema:
+          type: string
+      - description: Phone
+        in: body
+        name: phone
+        schema:
+          type: string
+      - description: Hire date
+        in: body
+        name: hire_date
+        schema:
+          type: string
+      - description: Department ID
+        in: body
+        name: department_id
+        schema:
+          type: integer
+      - description: Can login
+        in: body
+        name: can_login
+        schema:
+          type: string
+      - description: Password
+        in: body
+        name: password
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.StatusOK'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.StatusBadRequest'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/main.StatusUnauthorized'
+      security:
+      - apikey: []
+      summary: Update employee
+      tags:
+      - employees
+  /api/v1/location:
+    post:
+      consumes:
+      - application/json
+      description: Add a new location to the database
+      parameters:
+      - description: Name
+        in: body
+        name: name
+        required: true
+        schema:
+          type: string
+      - description: Address
+        in: body
+        name: address
+        required: true
+        schema:
+          type: string
+      - description: Postal code
+        in: body
+        name: postal_code
+        required: true
+        schema:
+          type: string
+      - description: City
+        in: body
+        name: city
+        required: true
+        schema:
+          type: string
+      - description: Country
+        in: body
+        name: country
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.StatusOK'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.StatusBadRequest'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/main.StatusUnauthorized'
+      security:
+      - apikey: []
+      summary: Add location
+      tags:
+      - locations
+  /api/v1/location/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a location from the database
+      parameters:
+      - description: Location ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.StatusOK'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.StatusBadRequest'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/main.StatusUnauthorized'
+      security:
+      - apikey: []
+      summary: Delete location
+      tags:
+      - locations
+    get:
+      consumes:
+      - application/json
+      description: Get all information from all locations or a specific location
+      parameters:
+      - description: Location ID
+        in: path
+        name: id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.getLocationJson'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/main.StatusUnauthorized'
+      security:
+      - apikey: []
+      summary: Show location(s)
+      tags:
+      - locations
+    put:
+      consumes:
+      - application/json
+      description: Update a location in the database
+      parameters:
+      - description: Location ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Name
+        in: body
+        name: name
+        schema:
+          type: string
+      - description: Address
+        in: body
+        name: address
+        schema:
+          type: string
+      - description: Postal code
+        in: body
+        name: postal_code
+        schema:
+          type: string
+      - description: City
+        in: body
+        name: city
+        schema:
+          type: string
+      - description: Country
+        in: body
+        name: country
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.StatusOK'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.StatusBadRequest'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/main.StatusUnauthorized'
+      security:
+      - apikey: []
+      summary: Update location
+      tags:
+      - locations
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Autenhticate the user with the provided credentials to get access
+        to the API and frontend
+      parameters:
+      - description: Username
+        in: header
+        name: username
+        type: string
+      - description: Password
+        in: header
+        name: password
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.StatusOK'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/main.StatusUnauthorized'
+      summary: Authenticate user
+      tags:
+      - auth
+  /logout:
+    get:
+      consumes:
+      - application/json
+      description: Logout the user and remove the session
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.StatusOK'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.StatusBadRequest'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/main.StatusUnauthorized'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.StatusInternalServerError'
+      summary: Logout user
+      tags:
+      - auth
+schemes:
+- http
+swagger: "2.0"

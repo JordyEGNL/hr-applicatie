@@ -1,0 +1,204 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+h1, h2 {
+    text-align: center;
+    color: #333;
+}
+
+
+form {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: none; /* Collapsed by default */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+label {
+    margin-top: 10px;
+}
+
+input, select, button {
+    padding: 8px;
+    margin-top: 2px;
+    box-sizing: border-box; /* Include padding in the width */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.delete-button {
+    background-color: #f85580;
+}
+
+.edit-button {
+    background-color: #52c785;
+}
+
+button {
+    padding: 10px;
+    background-color: #d2b20e; /* Restored brand color */
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 0;
+}
+
+button:hover {
+    filter: brightness(90%);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+table, th, td {
+    border: 1px solid #ccc;
+}
+
+th, td {
+    padding: 4px;
+    text-align: left;
+}
+
+.databutton {
+    font-size: 16px;
+    padding: 6px;
+}
+
+th {
+    background-color: #f8f8f8;
+}
+
+#loggedInUser {
+    font-weight: bold;
+}
+
+.error-message {
+    color: red;
+    text-align: center;
+    border-radius: 10px;
+    background-color: #ccc;
+    padding: 10px;
+    width: 20%;
+    margin: 0 auto;
+}
+
+.required:after {
+    content:" *";
+    color: red;
+}
+
+.button {
+    display: block;
+    width: 200px;
+    margin: 5px auto;
+    background-color: #d2b20e; /* Restored brand color */
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #b89d0a;
+}
+
+.toggle-button:hover {
+    background-color: #b89d0a;
+}
+
+.table-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.table-container .table-wrapper {
+    flex: 1;
+    min-width: 300px; /* Ensure tables are responsive */
+}
+
+/* Add this CSS to hide the form initially */
+#editEmployeeForm {
+    display: none;
+}
+
+
+#pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+#pagination button {
+    background-color: #b89d0a;
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#pagination button.hidden {
+    background-color: #c0c5ca !important;
+    cursor: not-allowed;
+}
+
+#pagination button:hover {
+    background-color: #b89d0a;
+}
+
+/* Styling for page number buttons */
+#pageNumbers button {
+    background-color: #f8f9fa;
+    color: #38372f;
+    border: 1px solid #b89d0a;
+}
+
+#pageNumbers button:hover {
+    background-color: #e9ecef;
+}
+
+#pageNumbers button.active {
+    background-color: #b89d0a;
+    color: white;
+    border: none;
+}
+
+#pageNumbers {
+    margin: 0 10px;
+}
+
+
+.employeeSearchBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}

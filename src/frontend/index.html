@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - HR-Applicatie</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Current logged in user: <a id="loggedInUser"></a></h1>
+    <button class="button" onclick="logout()">Logout</button>
+
+    <form id="addEmployeeForm">
+        <label for="firstName" class="required">First Name:</label>
+        <input type="text" id="firstName" name="firstName" required>
+
+        <label for="lastName" class="required">Last Name:</label>
+        <input type="text" id="lastName" name="lastName" required>
+
+        <label for="email" class="required">Email:</label>
+        <input type="email" id="email" name="email" value="@holiday-parks.eu" required>
+
+        <label for="phone" class="required">Phone:</label>
+        <input type="tel" id="phone" name="phone" placeholder="06-12345678" required>
+
+        <label for="hireDate" class="required">Hire Date:</label>
+        <input type="date" id="hireDate" name="hireDate" required>
+
+        <label for="department" class="required">Department ID:</label>
+        <select id="department" name="department" required>
+            <option value="" disabled selected>Select a department</option>
+        </select>
+
+        <label for="canLogin">Access to HR dashboard:</label>
+        <input type="checkbox" id="canLogin" name="canLogin">
+
+        <button class="add-button button" type="submit">Add Employee</button>
+
+    </form>
+    
+    <div id="error-message" class="error-message"></div>
+    <button class="toggle-button button" onclick="toggleForm()">Add New Employee</button>
+    
+
+    <!-- Edit Employee Form -->
+    <form id="editEmployeeForm">
+        <input type="hidden" id="employeeId" name="employeeId" value="">
+        <select id="editField" name="editField">
+            <option value="first_name">First Name</option>
+            <option value="last_name">Last Name</option>
+            <option value="email">Email</option>
+            <option value="phone">Phone</option>
+            <option value="hire_date">Hire Date</option>
+            <option value="department_id">Department</option>
+            <option value="can_login">Access to HR dashboard</option>
+        </select>
+        <input type="text" id="editValue" name="editValue">
+        <button type="submit">Edit Employee</button>
+    </form>
+
+    <!-- 
+    Employee table
+    -->
+    <h1>Employee List</h1>
+    <div class="employeeSearchBox">
+        <input type="text" id="searchBar" placeholder="Search employees...">
+    </div>
+    <table id="employeeTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Hire Date</th>
+                <th>Department</th>
+                <th>Manager Email</th>
+                <th>Location</th>
+                <th>Admin</th>
+                <th>Last Login</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be inserted here -->
+        </tbody>
+    </table>
+    <div id="pagination">
+        <button id="showPreviousButton" class="hidden">◀</button>
+        <span id="pageNumbers"></span>
+        <button id="showMoreButton" class="hidden">▶</button>
+    </div>
+
+    <div class="table-container">
+        <div class="table-wrapper">
+            <h1>Department List</h1>
+            <table id="departmentTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Location</th>
+                        <th>Manager</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-wrapper">
+            <h1>Location List</h1>
+            <table id="locationTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>City</th>
+                        <th>Postal code</th>
+                        <th>Country</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <a>Version: <a id="currentVersion"></a></a>
+    <script src="script.js"></script>
+    <script src="employee.js"></script>
+</body>
+</html>
