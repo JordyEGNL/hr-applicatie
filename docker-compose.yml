@@ -3,6 +3,7 @@ services:
   api:
     container_name: hr-api
     image: "ghcr.io/jordyegnl/hr-applicatie:${TAG:-latest}"
+    restart: always
     ports:
       - "${PORT:-80}:5000"
     environment:
@@ -11,7 +12,7 @@ services:
       DB_NAME: "hr"
       DB_USER: ${DB_USER:-dbadmin}
       DB_PASSWORD: ${DB_PASSWORD:-dbadmin}
-      API_DEBUG: ${API_DEBUG:-true}
+      API_DEBUG: ${API_DEBUG:-false}
       API_DEFAULT_USER: ${API_DEFAULT_USER:-admin}
       API_DEFAULT_PASSWORD: ${API_DEFAULT_PASSWORD:-password}
     env_file:
@@ -28,6 +29,7 @@ services:
   db:
     container_name: hr-db
     image: "mysql:latest"
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: "root"
       MYSQL_DATABASE: "hr"

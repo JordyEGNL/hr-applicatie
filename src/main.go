@@ -259,8 +259,7 @@ func createTables() {
 		password VARCHAR(100) DEFAULT '',
 		creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 		last_login TIMESTAMP NULL DEFAULT NULL,
-		edit_date TIMESTAMP NULL DEFAULT NULL,
-		FOREIGN KEY (department_id) REFERENCES department(id)
+		edit_date TIMESTAMP NULL DEFAULT NULL
 	)`
 	_, err := db.Query(query)
 	if err != nil {
@@ -273,9 +272,7 @@ func createTables() {
 		id INT AUTO_INCREMENT PRIMARY KEY,
 		name VARCHAR(100),
 		location_id INT,
-		manager_id INT,
-		FOREIGN KEY (location_id) REFERENCES location(id),
-		FOREIGN KEY (manager_id) REFERENCES employee(id)
+		manager_id INT
 	)`
 	_, err = db.Query(query)
 	if err != nil {
@@ -295,6 +292,25 @@ func createTables() {
 	_, err = db.Query(query)
 	if err != nil {
 		log.Fatalf("ERROR: Cannot create table location: %v", err)
+	}
+
+	// Add foreign keys after tables are created
+	query = `ALTER TABLE employee ADD CONSTRAINT fk_department FOREIGN KEY (department_id) REFERENCES department(id)`
+	_, err = db.Query(query)
+	if err != nil {
+		log.Fatalf("ERROR: Cannot add foreign key to employee: %v", err)
+	}
+
+	query = `ALTER TABLE department ADD CONSTRAINT fk_location FOREIGN KEY (location_id) REFERENCES location(id)`
+	_, err = db.Query(query)
+	if err != nil {
+		log.Fatalf("ERROR: Cannot add foreign key to department: %v", err)
+	}
+
+	query = `ALTER TABLE department ADD CONSTRAINT fk_manager FOREIGN KEY (manager_id) REFERENCES employee(id)`
+	_, err = db.Query(query)
+	if err != nil {
+		log.Fatalf("ERROR: Cannot add foreign key to department: %v", err)
 	}
 
 	// If no users are in the database, add a default user
