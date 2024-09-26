@@ -2,9 +2,9 @@ services:
 
   api:
     container_name: hr-api
-    build: ./src
+    image: "ghcr.io/jordyegnl/hr-applicatie:${TAG:-latest}"
     ports:
-      - "5000:5000"
+      - "${PORT:-80}:5000"
     environment:
       DB_HOST: ${DB_HOST:-db}
       DB_PORT: "3306"
