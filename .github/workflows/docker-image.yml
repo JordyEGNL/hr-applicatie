@@ -37,6 +37,9 @@ jobs:
     environment:
       name: dev
     steps:
+      - name: Check out Git Repository
+        uses: actions/checkout@v3
+
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -55,7 +58,7 @@ jobs:
         id: push
         uses: docker/build-push-action@v6
         with:
-          context: ./src/Dockerfile
+          context: ./src
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
