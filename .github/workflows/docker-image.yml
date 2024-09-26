@@ -37,6 +37,9 @@ jobs:
     environment:
       name: dev
     steps:
+      - name: Check out Git Repository
+        uses: actions/checkout@v3
+
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -49,7 +52,11 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: ${{ github.event.number }}
+          tags: | 
+            pr-${{ github.event.pull_request.number }}
+            ${{ github.sha }}
+          labels: |
+            source: ${{ github.event.pull_request.head.ref }}
 
       - name: Build and push Docker image
         id: push
@@ -60,18 +67,11 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v1
-        with:
-          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
-          subject-digest: ${{ steps.push.outputs.digest }}
-          push-to-registry: true
-
   DeployStaging:
     name: "Deploy to Staging"
     if: github.ref == 'refs/heads/main'
     needs: Lint
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     environment:
       name: staging
       url: "https://staging.hr.hoebergen.net"
@@ -80,19 +80,91 @@ jobs:
       run:
         shell: bash
     steps:
-      # Checkout the repository to the GitHub Actions runner
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Check out Git Repository
+        uses: actions/checkout@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GH_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            staging
+            ${{ github.sha }}
+          labels: |
+            source: ${{ github.sha }}
+
+      - name: Build and push Docker image
+        id: push
+        uses: docker/build-push-action@v6
+        with:
+          context: ./src
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Deploy on Staging infrastructure
+        run: |
+          echo "Deploying to staging environment"
+          echo "Deployed to ${{ job.environment.url }}"
+
+      - name: Copy docker-compose and env files to staging server
+        run: |
+          ssh jordy@10.0.20.15 "mkdir -p /home/jordy/docker/hr-applicatie-staging"
+          scp ./docker-compose.yml jordy@10.0.20.15:/home/jordy/docker/hr-applicatie-staging/docker-compose.yml
+          scp ./staging.env jordy@10.0.20.15:/home/jordy/docker/hr-applicatie-staging/.env
+
+      - name: Pull latest Docker image on staging server
+        run: |
+          ssh jordy@10.0.20.15 "docker-compose -f /home/jordy/docker/hr-applicatie-staging/docker-compose.yml pull api"
 
   DeployProduction:
     name: "Deploy to Production"
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     environment: production
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: DeployStaging
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
 
     steps:
-      # Checkout the repository to the GitHub Actions runner
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Check out Git Repository
+        uses: actions/checkout@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GH_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            latest
+            ${{ github.sha }}
+          labels: |
+            source: ${{ github.sha }}
+
+      - name: Build and push Docker image
+        id: push
+        uses: docker/build-push-action@v6
+        with:
+          context: ./src
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Deploy on Production infrastructure
+        run: |
+          echo "Deploying to production environment"
+          echo "Deployed to ${{ job.environment.url }}"
