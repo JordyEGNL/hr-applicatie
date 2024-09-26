@@ -71,7 +71,7 @@ jobs:
     name: "Deploy to Staging"
     if: github.ref == 'refs/heads/main'
     needs: Lint
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     environment:
       name: staging
       url: "https://staging.hr.hoebergen.net"
@@ -115,9 +115,19 @@ jobs:
           echo "Deploying to staging environment"
           echo "Deployed to ${{ job.environment.url }}"
 
+      - name: Copy docker-compose and env files to staging server
+        run: |
+          ssh jordy@10.0.20.15 "mkdir -p /home/jordy/docker/hr-applicatie-staging"
+          scp ./docker-compose.yml jordy@10.0.20.15:/home/jordy/docker/hr-applicatie-staging/docker-compose.yml
+          scp ./staging.env jordy@10.0.20.15:/home/jordy/docker/hr-applicatie-staging/.env
+
+      - name: Pull latest Docker image on staging server
+        run: |
+          ssh jordy@10.0.20.15 "docker-compose -f /home/jordy/docker/hr-applicatie-staging/docker-compose.yml pull api"
+
   DeployProduction:
     name: "Deploy to Production"
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     environment: production
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: DeployStaging
