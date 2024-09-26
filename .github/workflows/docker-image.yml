@@ -183,6 +183,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no jordy@10.0.20.15 "mkdir -p /home/jordy/docker/hr-applicatie"
           scp -o StrictHostKeyChecking=no ./docker-compose.yml jordy@10.0.20.15:/home/jordy/docker/hr-applicatie/docker-compose.yml
+          scp -o StrictHostKeyChecking=no ./production.env jordy@10.0.20.15:/home/jordy/docker/hr-applicatie-staging/.env
 
       - name: Pull latest Docker image on production server
         run: |
