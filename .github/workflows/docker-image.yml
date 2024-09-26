@@ -123,12 +123,12 @@ jobs:
       - name: Copy docker compose and env files to staging server
         run: |
           ssh -o StrictHostKeyChecking=no jordy@10.0.20.15 "mkdir -p /home/jordy/docker/hr-applicatie-staging"
-          scp -o StrictHostKeyChecking=no ./docker compose.yml jordy@10.0.20.15:/home/jordy/docker/hr-applicatie-staging/docker compose.yml
+          scp -o StrictHostKeyChecking=no ./docker compose.yml jordy@10.0.20.15:/home/jordy/docker/hr-applicatie-staging/docker-compose.yml
           scp -o StrictHostKeyChecking=no ./staging.env jordy@10.0.20.15:/home/jordy/docker/hr-applicatie-staging/.env
 
       - name: Pull latest Docker image on staging server
         run: |
-          ssh -o StrictHostKeyChecking=no jordy@10.0.20.15 "docker compose -f /home/jordy/docker/hr-applicatie-staging/docker compose.yml pull api && docker compose -f /home/jordy/docker/hr-applicatie-staging/docker compose.yml up -d --force-recreate"
+          ssh -o StrictHostKeyChecking=no jordy@10.0.20.15 "docker compose -f /home/jordy/docker/hr-applicatie-staging/docker-compose.yml pull api && docker compose -f /home/jordy/docker/hr-applicatie-staging/docker-compose.yml up -d --force-recreate"
 
   DeployProduction:
     name: "Deploy to Production"
@@ -182,8 +182,8 @@ jobs:
       - name: Copy docker compose and env files to production server
         run: |
           ssh -o StrictHostKeyChecking=no jordy@10.0.20.15 "mkdir -p /home/jordy/docker/hr-applicatie
-          scp -o StrictHostKeyChecking=no ./docker compose.yml jordy@10.0.20.15:/home/jordy/docker/hr-applicatie/docker compose.yml
+          scp -o StrictHostKeyChecking=no ./docker compose.yml jordy@10.0.20.15:/home/jordy/docker/hr-applicatie/docker-compose.yml
 
       - name: Pull latest Docker image on production server
         run: |
-          ssh -o StrictHostKeyChecking=no jordy@10.0.20.15 "docker compose -f /home/jordy/docker/hr-applicatie/docker compose.yml pull api && docker compose -f /home/jordy/docker/hr-applicatie/docker compose.yml up -d  --force-recreate"
+          ssh -o StrictHostKeyChecking=no jordy@10.0.20.15 "docker compose -f /home/jordy/docker/hr-applicatie/docker-compose.yml pull api && docker compose -f /home/jordy/docker/hr-applicatie/docker-compose.yml up -d  --force-recreate"
