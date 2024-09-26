@@ -52,7 +52,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: ${{ github.event.number }}
+          tags: pr-${{ github.event.number }}
 
       - name: Build and push Docker image
         id: push
