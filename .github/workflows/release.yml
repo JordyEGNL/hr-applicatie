@@ -6,7 +6,7 @@ on:
       version:
         description: 'Version to release, format: "v1.0.0"'
         required: true
-        default: 'false'
+        default: 'v0.0.0'
         type: string
 
 permissions:
