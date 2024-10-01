@@ -27,6 +27,7 @@ jobs:
     name: "Deploy to Staging"
     needs: Lint
     runs-on: self-hosted
+    if: github.ref == 'refs/heads/main'
     environment:
       name: staging
       url: "https://staging.hr.hoebergen.net"
@@ -88,7 +89,10 @@ jobs:
   DeployProduction:
     name: "Deploy to Production"
     runs-on: self-hosted
-    environment: production
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: production
+      url: "https://hr.hoebergen.net"
     needs: DeployStaging
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
 
