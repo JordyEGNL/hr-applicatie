@@ -27,7 +27,6 @@ jobs:
 
   DeployNightly:
     name: "Deploy to Nightly"
-    if: github.event_name == 'pull_request'
     needs: Lint
     runs-on: ubuntu-latest
     environment:
