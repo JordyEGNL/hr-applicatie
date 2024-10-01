@@ -96,7 +96,6 @@ jobs:
   DeployProduction:
     name: "Deploy to Production"
     runs-on: self-hosted
-    needs: Tagging
     if: github.ref == 'refs/heads/main'
     environment:
       name: production
