@@ -1,4 +1,4 @@
-name: "Release ${{ inputs.VERSION }} - Build and Deploy"
+name: "Release - Build and Deploy"
 
 on:
   workflow_dispatch:
