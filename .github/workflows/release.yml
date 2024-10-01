@@ -143,6 +143,16 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
+      - name: Create draft release
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          tag_name: ${{ inputs.VERSION }}
+          generate_release_notes: true
+          files: |
+            docker-compose.yml
+            production.env
+
       - name: Deploy on Production infrastructure
         run: |
           echo "Deploying to production environment"
