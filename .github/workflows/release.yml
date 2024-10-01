@@ -2,6 +2,12 @@ name: "Release - Build and Deploy"
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release, format: "v1.0.0"'
+        required: true
+        default: 'false'
+        type: string
 
 permissions:
   contents: read
@@ -22,6 +28,7 @@ jobs:
         uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: src/Dockerfile
+
 
   DeployStaging:
     name: "Deploy to Staging"
@@ -84,11 +91,12 @@ jobs:
 
       - name: Pull latest Docker image on staging server
         run: |
-          ssh -o StrictHostKeyChecking=no jordy@10.0.20.15 "docker compose -f /home/jordy/docker/hr-applicatie-staging/docker-compose.yml pull api && docker compose -f /home/jordy/docker/hr-applicatie-staging/docker-compose.yml up -d --force-recreate"
+          ssh -o StrictHostKeyChecking=no jordy@10.0.20.15 "docker compose -f /home/jordy/docker/hr-applicatie-staging/docker-compose.yml pull api && docker compose -f /home/jordy/docker/hr-applicatie-staging/docker-compose.yml up -d --force-recreate --remove-orphans"
 
   DeployProduction:
     name: "Deploy to Production"
     runs-on: self-hosted
+    needs: Tagging
     if: github.ref == 'refs/heads/main'
     environment:
       name: production
@@ -99,6 +107,14 @@ jobs:
     steps:
       - name: Check out Git Repository
         uses: actions/checkout@v4
+
+      - name: Create a new tag
+        uses: EndBug/add-and-commit@v9
+        with:
+          default_author: github_actions
+          message: 'chore: version ${{ inputs.VERSION }}'
+          tag: ${{ inputs.VERSION }}
+          push: true
 
       - name: Log in to the Container registry
         uses: docker/login-action@v3
@@ -114,6 +130,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             latest
+            ${{ inputs.VERSION }}
             ${{ github.sha }}
           labels: |
             source: ${{ github.sha }}
@@ -145,4 +162,4 @@ jobs:
 
       - name: Pull latest Docker image on production server
         run: |
-          ssh -o StrictHostKeyChecking=no jordy@10.0.20.15 "docker compose -f /home/jordy/docker/hr-applicatie/docker-compose.yml pull api && docker compose -f /home/jordy/docker/hr-applicatie/docker-compose.yml up -d  --force-recreate"
+          ssh -o StrictHostKeyChecking=no jordy@10.0.20.15 "docker compose -f /home/jordy/docker/hr-applicatie/docker-compose.yml pull api && docker compose -f /home/jordy/docker/hr-applicatie/docker-compose.yml up -d  --force-recreate --remove-orphans"
