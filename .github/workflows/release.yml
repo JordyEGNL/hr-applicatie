@@ -29,19 +29,10 @@ jobs:
         with:
           dockerfile: src/Dockerfile
 
-
-  DeployStaging:
-    name: "Deploy to Staging"
+  Update:
+    name: "Update version and commit"
+    runs-on: ubuntu-latest
     needs: Lint
-    runs-on: self-hosted
-    if: github.ref == 'refs/heads/main'
-    environment:
-      name: staging
-      url: "https://staging.hr.hoebergen.net"
-    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
-    defaults:
-      run:
-        shell: bash
     steps:
       - name: Check out Git Repository
         uses: actions/checkout@v4
@@ -58,6 +49,22 @@ jobs:
           message: 'chore: version ${{ inputs.VERSION }}'
           tag: ${{ inputs.VERSION }}
           push: true
+
+  DeployStaging:
+    name: "Deploy to Staging"
+    needs: Update
+    runs-on: self-hosted
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: staging
+      url: "https://staging.hr.hoebergen.net"
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Check out Git Repository
+        uses: actions/checkout@v4
 
       - name: Log in to the Container registry
         uses: docker/login-action@v3
