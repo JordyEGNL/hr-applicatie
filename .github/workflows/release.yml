@@ -154,6 +154,7 @@ jobs:
           files: |
             docker-compose.yml
             production.env
+          token: ${{ secrets.RELEASE_TOKEN }}
 
       - name: Deploy on Production infrastructure
         run: |
