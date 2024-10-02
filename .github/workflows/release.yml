@@ -39,11 +39,6 @@ jobs:
         with:
           token: ${{ secrets.RELEASE_TOKEN }}
 
-      - name: Debug
-        run: |
-          echo "Version: ${{ inputs.VERSION }}"
-          ls -la
-
       - name: Update version
         shell: bash
         run: scripts/update-version.sh -v "${{ inputs.VERSION }}"
