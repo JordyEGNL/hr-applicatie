@@ -48,10 +48,8 @@ jobs:
         with:
           token: ${{ secrets.RELEASE_TOKEN }}
 
-      - name: Update version in index.html
-        run: |
-          "sed -i 's/Version:.*/Version: ${{ inputs.VERSION }}/' src/frontend/login/index.html"
-          "sed -i 's/TAG=.*/TAG=${{ inputs.VERSION }}/' production.env"
+      - name: Update version
+        run: scripts/update-version.sh -v "${{ inputs.VERSION }}"
 
       - name: Create a new tag
         uses: EndBug/add-and-commit@v9
