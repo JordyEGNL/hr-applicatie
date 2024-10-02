@@ -39,9 +39,14 @@ jobs:
         with:
           token: ${{ secrets.RELEASE_TOKEN }}
 
+      - name: Debug
+        run: |
+          echo "Version: ${{ inputs.VERSION }}"
+          ls -la
+
       - name: Update version
         shell: bash
-        run: /scripts/update-version.sh -v "${{ inputs.VERSION }}"
+        run: scripts/update-version.sh -v "${{ inputs.VERSION }}"
 
       - name: Create a new tag
         uses: EndBug/add-and-commit@v9
