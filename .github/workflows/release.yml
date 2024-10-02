@@ -45,6 +45,19 @@ jobs:
     steps:
       - name: Check out Git Repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.RELEASE_TOKEN }}
+
+      - name: Update version in index.html
+        run: "sed -i 's/Version: v0.0.1/Version: ${{ inputs.VERSION }}/' ./src/frontend/login/index.html"
+
+      - name: Create a new tag
+        uses: EndBug/add-and-commit@v9
+        with:
+          default_author: github_actions
+          message: 'chore: version ${{ inputs.VERSION }}'
+          tag: ${{ inputs.VERSION }}
+          push: true
 
       - name: Log in to the Container registry
         uses: docker/login-action@v3
@@ -108,14 +121,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.RELEASE_TOKEN }}
-
-      - name: Create a new tag
-        uses: EndBug/add-and-commit@v9
-        with:
-          default_author: github_actions
-          message: 'chore: version ${{ inputs.VERSION }}'
-          tag: ${{ inputs.VERSION }}
-          push: true
 
       - name: Log in to the Container registry
         uses: docker/login-action@v3
