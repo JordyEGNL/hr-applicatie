@@ -2,7 +2,7 @@ services:
 
   api:
     container_name: hr-api-${BUILD:-prod}
-    image: "ghcr.io/jordyegnl/hr-applicatie:${TAG:-latest}"
+    image: ghcr.io/jordyegnl/hr-applicatie:${TAG:-latest}
     restart: always
     ports:
       - "${PORT:-80}:5000"
