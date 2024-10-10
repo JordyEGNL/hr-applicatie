@@ -1,19 +1,7 @@
-FROM golang:1.22
+FROM nginx:1.27.2-alpine-slim
 
-WORKDIR /app
+COPY index.html /usr/share/nginx/html/index.html
 
-COPY ./go.mod ./go.sum ./
+EXPOSE 80
 
-RUN go mod download
-
-COPY ./*.go ./
-
-COPY ./docs ./docs
-
-RUN go build -o /hr-api
-
-COPY ./frontend ./frontend
-
-EXPOSE 5000
-
-CMD ["/hr-api"]
+CMD ["nginx", "-g", "daemon off;"]
