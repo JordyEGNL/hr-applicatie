@@ -105,13 +105,20 @@ jobs:
 
       - name: Copy docker compose and env files to staging server
         run: |
-          ssh -o StrictHostKeyChecking=no jordy@10.0.20.15 "mkdir -p /home/jordy/docker/hr-applicatie-staging"
-          scp -o StrictHostKeyChecking=no ./docker-compose.yml jordy@10.0.20.15:/home/jordy/docker/hr-applicatie-staging/docker-compose.yml
-          scp -o StrictHostKeyChecking=no ./staging.env jordy@10.0.20.15:/home/jordy/docker/hr-applicatie-staging/.env
+          ssh -o StrictHostKeyChecking=no jordy@10.0.20.12 "mkdir -p /home/jordy/docker/hr-applicatie-staging"
+          scp -o StrictHostKeyChecking=no ./docker-compose-staging.yml jordy@10.0.20.12:/home/jordy/docker/hr-applicatie-staging/docker-compose.yml
+          scp -o StrictHostKeyChecking=no ./staging.env jordy@10.0.20.12:/home/jordy/docker/hr-applicatie-staging/.env
 
-      - name: Pull latest Docker image on staging server
-        run: |
-          ssh -o StrictHostKeyChecking=no jordy@10.0.20.15 "docker compose -f /home/jordy/docker/hr-applicatie-staging/docker-compose.yml pull api && docker compose -f /home/jordy/docker/hr-applicatie-staging/docker-compose.yml up -d --force-recreate --remove-orphans"
+      # https://github.com/kitconcept/docker-stack-deploy
+      - name: Deploy stack to swarm
+        uses: kitconcept/docker-stack-deploy@v1.0.1
+        with:
+          remote_host: 10.0.20.12
+          remote_user: jordy
+          remote_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          stack_file: "/home/jordy/docker/hr-applicatie-staging/docker-compose.yml"
+          env_file: "/home/jordy/docker/hr-applicatie-staging/.env"
+          stack_name: "nginx-staging"
 
   DeployProduction:
     name: "Deploy to Production"
@@ -180,10 +187,17 @@ jobs:
 
       - name: Copy docker compose and env files to production server
         run: |
-          ssh -o StrictHostKeyChecking=no jordy@10.0.20.15 "mkdir -p /home/jordy/docker/hr-applicatie"
-          scp -o StrictHostKeyChecking=no ./docker-compose.yml jordy@10.0.20.15:/home/jordy/docker/hr-applicatie/docker-compose.yml
-          scp -o StrictHostKeyChecking=no ./production.env jordy@10.0.20.15:/home/jordy/docker/hr-applicatie/.env
+          ssh -o StrictHostKeyChecking=no jordy@10.0.20.12 "mkdir -p /home/jordy/docker/hr-applicatie"
+          scp -o StrictHostKeyChecking=no ./docker-compose.yml jordy@10.0.20.12:/home/jordy/docker/hr-applicatie/docker-compose.yml
+          scp -o StrictHostKeyChecking=no ./production.env jordy@10.0.20.12:/home/jordy/docker/hr-applicatie/.env
 
-      - name: Pull latest Docker image on production server
-        run: |
-          ssh -o StrictHostKeyChecking=no jordy@10.0.20.15 "docker compose -f /home/jordy/docker/hr-applicatie/docker-compose.yml pull api && docker compose -f /home/jordy/docker/hr-applicatie/docker-compose.yml up -d  --force-recreate --remove-orphans"
+      # https://github.com/kitconcept/docker-stack-deploy
+      - name: Deploy stack to swarm
+        uses: kitconcept/docker-stack-deploy@v1.0.1
+        with:
+          remote_host: 10.0.20.12
+          remote_user: jordy
+          remote_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          stack_file: "/home/jordy/docker/hr-applicatie/docker-compose.yml"
+          env_file: "/home/jordy/docker/hr-applicatie/.env"
+          stack_name: "nginx-prod"
