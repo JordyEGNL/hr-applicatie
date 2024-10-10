@@ -1,19 +1,11 @@
-FROM golang:1.22
+FROM ubuntu
 
-WORKDIR /app
+RUN apt-get update
 
-COPY ./go.mod ./go.sum ./
+RUN apt-get install nginx -y
 
-RUN go mod download
+COPY index.html /var/www/html/
 
-COPY ./*.go ./
+EXPOSE 80
 
-COPY ./docs ./docs
-
-RUN go build -o /hr-api
-
-COPY ./frontend ./frontend
-
-EXPOSE 5000
-
-CMD ["/hr-api"]
+CMD ["nginx", "-g", "daemon off;"]
