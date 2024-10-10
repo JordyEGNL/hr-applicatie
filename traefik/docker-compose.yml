@@ -1,0 +1,39 @@
+services:
+  traefik:
+    image: traefik:v3.1
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager 
+      restart_policy:
+        condition: on-failure
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.traefik.rule=Host(`traefik.hr.hoebergen.net`)"
+        - "traefik.http.routers.traefik.service=api@internal"
+        - "traefik.http.routers.traefik.entrypoints=websecure"
+        - "traefik.http.services.api.loadbalancer.server.port=8080"
+    ports:
+      - "0.0.0.0:80:80"     # HTTP
+      - "0.0.0.0:443:443"   # HTTPS
+      - "0.0.0.0:8080:8080" # Traefik Dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik.yml:/etc/traefik/traefik.yml
+      - ./acme.json:/etc/traefik/acme.json
+    environment:
+      CF_DNS_API_TOKEN: /run/secrets/cf_dns_api_token
+      CF_ZONE_API_TOKEN: /run/secrets/cf_dns_api_token
+    secrets:
+      - cf_dns_api_token
+    networks:
+      - web
+
+networks:
+  web:
+    external: true
+
+secrets:
+  cf_dns_api_token:
+    external: true
