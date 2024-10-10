@@ -31,7 +31,7 @@ jobs:
   DeployNightly:
     name: "Deploy to Nightly"
     needs: Lint
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     environment:
       name: dev
     steps:
