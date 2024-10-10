@@ -119,7 +119,7 @@ jobs:
           remote_host: 10.0.20.12
           remote_user: jordy
           remote_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
-          stack_file: "/home/jordy/docker/hr-applicatie-staging/docker-compose.yml"
+          stack_file: "./docker-compose-staging.yml"
           stack_name: "nginx-staging"
 
   DeployProduction:
@@ -203,5 +203,5 @@ jobs:
           remote_host: 10.0.20.12
           remote_user: jordy
           remote_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
-          stack_file: "/home/jordy/docker/hr-applicatie/docker-compose.yml"
+          stack_file: "./docker-compose.yml"
           stack_name: "nginx-prod"
