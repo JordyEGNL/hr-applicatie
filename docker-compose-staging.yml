@@ -11,10 +11,10 @@ services:
         order: start-first
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.nginx-prod.rule=Host(`hr.hoebergen.net`)" # Vervang door je domeinnaam
-        - "traefik.http.routers.nginx-prod.service=nginx-prod"
-        - "traefik.http.routers.nginx-prod.entrypoints=websecure"
-        - "traefik.http.services.nginx-prod.loadbalancer.server.port=80"
+        - "traefik.http.routers.nginx-staging.rule=Host(`staging.hr.hoebergen.net`)" # Vervang door je domeinnaam
+        - "traefik.http.routers.nginx-staging.service=nginx-staging"
+        - "traefik.http.routers.nginx-staging.entrypoints=websecure"
+        - "traefik.http.services.nginx-staging.loadbalancer.server.port=80"
 
 networks:
   default:
