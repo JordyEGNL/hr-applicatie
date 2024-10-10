@@ -109,18 +109,9 @@ jobs:
           scp -o StrictHostKeyChecking=no ./docker-compose-staging.yml jordy@10.0.20.12:/home/jordy/docker/hr-applicatie-staging/docker-compose.yml
           scp -o StrictHostKeyChecking=no ./staging.env jordy@10.0.20.12:/home/jordy/docker/hr-applicatie-staging/.env
 
-      # https://github.com/kitconcept/docker-stack-deploy
       - name: Deploy stack to swarm
-        uses: kitconcept/docker-stack-deploy@v1.0.1
-        with:
-          registry: "ghcr.io"
-          username: ${{ secrets.GHCR_USERNAME }}
-          password: ${{ secrets.GHCR_TOKEN }}
-          remote_host: 10.0.20.12
-          remote_user: jordy
-          remote_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
-          stack_file: "./docker-compose-staging.yml"
-          stack_name: "nginx-staging"
+        run: |
+          ssh -o StrictHostKeyChecking=no jordy@10.0.20.12 "cd /home/jordy/docker/hr-applicatie-staging && docker stack deploy --compose-file docker-compose.yml nginx-staging"
 
   DeployProduction:
     name: "Deploy to Production"
@@ -193,15 +184,6 @@ jobs:
           scp -o StrictHostKeyChecking=no ./docker-compose.yml jordy@10.0.20.12:/home/jordy/docker/hr-applicatie/docker-compose.yml
           scp -o StrictHostKeyChecking=no ./production.env jordy@10.0.20.12:/home/jordy/docker/hr-applicatie/.env
 
-      # https://github.com/kitconcept/docker-stack-deploy
       - name: Deploy stack to swarm
-        uses: kitconcept/docker-stack-deploy@v1.0.1
-        with:
-          registry: "ghcr.io"
-          username: ${{ secrets.GHCR_USERNAME }}
-          password: ${{ secrets.GHCR_TOKEN }}
-          remote_host: 10.0.20.12
-          remote_user: jordy
-          remote_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
-          stack_file: "./docker-compose.yml"
-          stack_name: "nginx-prod"
+        run: |
+          ssh -o StrictHostKeyChecking=no jordy@10.0.20.12 "cd /home/jordy/docker/hr-applicatie && docker stack deploy --compose-file docker-compose.yml nginx-prod"
