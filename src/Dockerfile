@@ -1,8 +1,4 @@
-FROM ubuntu
-
-RUN apt-get update
-
-RUN apt-get install nginx -y
+FROM nginx:1.27.2-alpine-slim
 
 COPY index.html /var/www/html/
 
