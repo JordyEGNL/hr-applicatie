@@ -1,7 +1,5 @@
-version: "3"
-
 services:
-  whoami:
+  hr-applicatie-staging:
     image: ghcr.io/jordyegnl/hr-applicatie:staging
     deploy:
       replicas: 3

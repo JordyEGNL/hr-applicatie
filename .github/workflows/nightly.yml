@@ -3,6 +3,9 @@ name: "Nightly - Build and Deploy"
 on:
   schedule:
     - cron: "0 0 * * *" # Run every night at midnight
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -59,3 +62,23 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           # labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Deploy on Nightly infrastructure
+        run: |
+          echo "Deploying to nightly environment"
+          echo "Deployed to ${{ job.environment.url }}"
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Copy docker compose and env files to nightly server
+        run: |
+          ssh -o StrictHostKeyChecking=no jordy@10.0.20.12 "mkdir -p /home/jordy/docker/hr-applicatie-nightly"
+          scp -o StrictHostKeyChecking=no ./docker-compose-nightly.yml jordy@10.0.20.12:/home/jordy/docker/hr-applicatie-nightly/docker-compose.yml
+          scp -o StrictHostKeyChecking=no ./nightly.env jordy@10.0.20.12:/home/jordy/docker/hr-applicatie-nightly/.env
+
+      - name: Deploy stack to swarm
+        run: |
+          ssh -o StrictHostKeyChecking=no jordy@10.0.20.12 "cd /home/jordy/docker/hr-applicatie-nightly && docker stack deploy --compose-file docker-compose.yml nginx-nightly"

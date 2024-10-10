@@ -1,7 +1,5 @@
-version: "3"
-
 services:
-  whoami:
+  hr-applicatie-prod:
     image: ghcr.io/jordyegnl/hr-applicatie:latest
     deploy:
       replicas: 3

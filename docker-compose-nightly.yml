@@ -1,0 +1,22 @@
+services:
+  hr-applicatie-nightly:
+    image: ghcr.io/jordyegnl/hr-applicatie:nightly
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: "10s"
+        order: start-first
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.nginx-nightly.rule=Host(`nightly.hr.hoebergen.net`)" # Vervang door je domeinnaam
+        - "traefik.http.routers.nginx-nightly.service=nginx-nightly"
+        - "traefik.http.routers.nginx-nightly.entrypoints=websecure"
+        - "traefik.http.services.nginx-nightly.loadbalancer.server.port=80"
+
+networks:
+  default:
+    name: web
+    external: true
