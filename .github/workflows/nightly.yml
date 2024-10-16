@@ -75,10 +75,10 @@ jobs:
 
       - name: Copy docker compose and env files to nightly server
         run: |
-          ssh -o StrictHostKeyChecking=no jordy@10.0.20.13 "mkdir -p /home/jordy/docker/hr-applicatie-nightly"
-          scp -o StrictHostKeyChecking=no ./docker-compose-nightly.yml jordy@10.0.20.13:/home/jordy/docker/hr-applicatie-nightly/docker-compose.yml
-          scp -o StrictHostKeyChecking=no ./nightly.env jordy@10.0.20.13:/home/jordy/docker/hr-applicatie-nightly/.env
+          ssh -o StrictHostKeyChecking=no jordy@${{ secrets.SERVER_IP }} "mkdir -p /home/jordy/docker/hr-applicatie-nightly"
+          scp -o StrictHostKeyChecking=no ./docker-compose-nightly.yml jordy@${{ secrets.SERVER_IP }}:/home/jordy/docker/hr-applicatie-nightly/docker-compose.yml
+          scp -o StrictHostKeyChecking=no ./nightly.env jordy@${{ secrets.SERVER_IP }}:/home/jordy/docker/hr-applicatie-nightly/.env
 
       - name: Deploy stack to swarm
         run: |
-          ssh -o StrictHostKeyChecking=no jordy@10.0.20.13 "cd /home/jordy/docker/hr-applicatie-nightly && docker stack deploy --compose-file docker-compose.yml nginx-nightly"
+          ssh -o StrictHostKeyChecking=no jordy@${{ secrets.SERVER_IP }} "cd /home/jordy/docker/hr-applicatie-nightly && docker stack deploy --compose-file docker-compose.yml nginx-nightly"

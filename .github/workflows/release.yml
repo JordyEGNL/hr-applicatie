@@ -105,13 +105,13 @@ jobs:
 
       - name: Copy docker compose and env files to staging server
         run: |
-          ssh -o StrictHostKeyChecking=no jordy@10.0.20.13 "mkdir -p /home/jordy/docker/hr-applicatie-staging"
-          scp -o StrictHostKeyChecking=no ./docker-compose-staging.yml jordy@10.0.20.13:/home/jordy/docker/hr-applicatie-staging/docker-compose.yml
-          scp -o StrictHostKeyChecking=no ./staging.env jordy@10.0.20.13:/home/jordy/docker/hr-applicatie-staging/.env
+          ssh -o StrictHostKeyChecking=no jordy@${{ secrets.SERVER_IP }} "mkdir -p /home/jordy/docker/hr-applicatie-staging"
+          scp -o StrictHostKeyChecking=no ./docker-compose-staging.yml jordy@${{ secrets.SERVER_IP }}:/home/jordy/docker/hr-applicatie-staging/docker-compose.yml
+          scp -o StrictHostKeyChecking=no ./staging.env jordy@${{ secrets.SERVER_IP }}:/home/jordy/docker/hr-applicatie-staging/.env
 
       - name: Deploy stack to swarm
         run: |
-          ssh -o StrictHostKeyChecking=no jordy@10.0.20.13 "cd /home/jordy/docker/hr-applicatie-staging && docker stack deploy --compose-file docker-compose.yml nginx-staging"
+          ssh -o StrictHostKeyChecking=no jordy@${{ secrets.SERVER_IP }} "cd /home/jordy/docker/hr-applicatie-staging && docker stack deploy --compose-file docker-compose.yml nginx-staging"
 
   DeployProduction:
     name: "Deploy to Production"
@@ -180,10 +180,10 @@ jobs:
 
       - name: Copy docker compose and env files to production server
         run: |
-          ssh -o StrictHostKeyChecking=no jordy@10.0.20.13 "mkdir -p /home/jordy/docker/hr-applicatie"
-          scp -o StrictHostKeyChecking=no ./docker-compose.yml jordy@10.0.20.13:/home/jordy/docker/hr-applicatie/docker-compose.yml
-          scp -o StrictHostKeyChecking=no ./production.env jordy@10.0.20.13:/home/jordy/docker/hr-applicatie/.env
+          ssh -o StrictHostKeyChecking=no jordy@${{ secrets.SERVER_IP }} "mkdir -p /home/jordy/docker/hr-applicatie"
+          scp -o StrictHostKeyChecking=no ./docker-compose.yml jordy@${{ secrets.SERVER_IP }}:/home/jordy/docker/hr-applicatie/docker-compose.yml
+          scp -o StrictHostKeyChecking=no ./production.env jordy@${{ secrets.SERVER_IP }}:/home/jordy/docker/hr-applicatie/.env
 
       - name: Deploy stack to swarm
         run: |
-          ssh -o StrictHostKeyChecking=no jordy@10.0.20.13 "cd /home/jordy/docker/hr-applicatie && docker stack deploy --compose-file docker-compose.yml nginx-prod"
+          ssh -o StrictHostKeyChecking=no jordy@${{ secrets.SERVER_IP }} "cd /home/jordy/docker/hr-applicatie && docker stack deploy --compose-file docker-compose.yml nginx-prod"
